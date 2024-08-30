@@ -1,0 +1,84 @@
+
+body{
+  background-color:  rgb(17 14 35 / 80%);
+}
+  /* background-color: rgb(17 14 35 / 80%); */
+.head {
+  height: 50px;
+  width:100%;
+  display: none;
+  max-width: 100%;
+  gap: 865px 900px
+}
+
+
+
+.fRAMEA,
+.tEXTBLOCK {
+  display: flex;
+  width:100%;
+}
+
+.fRAMEA {
+  width: 221px;
+
+}
+.moonSolid1Icon {
+  height: 23.1px;
+  width: 48px;
+  margin: 10px 1px 5px 2px;
+}
+.frameItem {
+  height: 70px;
+  width: 196px;
+  position: relative;
+  border-radius: var(--br-11xl);
+  background-color: var(--color-skyblue);
+  border: 5px solid var(--color-black);
+  box-sizing: border-box;
+  display: none;
+}
+
+.head {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  box-sizing: border-box;
+}
+
+.Login{
+  display: flex;
+  /* flex-wrap:end; */
+  padding-top: 2rem;
+  padding-left: 13rem;
+}
+
+.rectangleGroup {
+  cursor: pointer;
+  border: 1px solid black;
+  background-color: rgb(17 14 35 / 80%);
+   box-shadow: 0 4px 8px 0 rgba(237, 68, 68, 0.418),0 
+  6px 20px 0 rgba(247, 94, 94, 0.842);
+  width: 150px;
+  height:50px;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 15px;
+}
+
+.loginsignup {
+  font-size: 20px;
+  color:#E52E2E;
+}
+
+.Sign{
+  text-decoration: none;
+}
+
+
+@media screen and (max-width: 750px) {
+  .head {
+    gap: 865px 65px;
+  }
+}
