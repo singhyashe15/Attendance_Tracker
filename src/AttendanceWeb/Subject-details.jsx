@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import "./subject.css"
 
 
-const getLcoalItems = ()=>{
+const getLocalItems = ()=>{
   let lists = localStorage.getItem("list");
 
   if(lists)
@@ -15,11 +15,12 @@ const getLcoalItems = ()=>{
 
 const SubDetail = ({onClose})=>{
   const [sub,setsub] = useState({sub_name:'',present:'',totalclass:''})
-  const [list,setlist] = useState(getLcoalItems())
+  const [list,setlist] = useState(getLocalItems)
   const regex = /[a-zA-Z]/;
 
-  const add = (e)=>{
+  const add = (e) =>{
     const {name,value} = e.target
+    
     setsub((prev)=>{
       return{
         ...prev,
@@ -42,14 +43,22 @@ const SubDetail = ({onClose})=>{
     toast("Data are not filled fully")
   }
 
+
   const show = ()=>{
     const newINdex = list.length > 0 ? list[list.length - 1].index + 1 : 0;
     if(sub.sub_name !== "null" && sub.totalclass > 0 && sub.present > 0 && sub.totalclass >= sub.present){
-      setlist([...list,{sub_name:sub.sub_name,present:sub.present,totalclass:sub.totalclass,index:newINdex}])
-      console.log("list" + setsub)
-      localStorage.setItem("list",JSON.stringify(list))
-
-      onClose();
+      setlist((prev)=>[
+        ...prev,{
+          sub_name: sub.sub_name,
+          present:sub.present,
+          totalclass:sub.totalclass,
+          index:newINdex
+        }
+      ])
+      setTimeout(()=>{
+        console.log("onclose")
+        onClose();
+      },1000)
     }
     else if(sub.totalclass < sub.present && !regex.test(sub.totalclass) && !regex.test(sub.present)){
       notifywarn();
@@ -64,14 +73,15 @@ const SubDetail = ({onClose})=>{
   }
 
   useEffect(()=>{
-    localStorage.setItem("list",JSON.stringify(list))
+    console.log(list)
+     localStorage.setItem("list",JSON.stringify(list))
   },[list])
 
   return (
     <div className="sec">
           <div className="add_sub">
-          <div className="details details1">
-          <span className="Sub">
+            <div className="details details1">
+            <span className="Sub">
               Subject Name:
             </span>
             <input 
@@ -108,8 +118,9 @@ const SubDetail = ({onClose})=>{
             </div>
             <div className="details_add">
             <button 
-                className="add" 
-                onClick={()=>{show();}}>
+                className="add"
+                onClick={show} 
+                >
               Submit
             </button>
             <ToastContainer

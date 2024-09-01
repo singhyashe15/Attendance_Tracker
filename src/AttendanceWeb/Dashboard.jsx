@@ -3,23 +3,22 @@ import  './dashboard.css';
 import List from "./attendlist";
 import SubDetail from "./Subject-details";
 
-
-const getLcoalItems = ()=>{
-    let lists = localStorage.getItem("list");
-
-    if(lists)
-     return  JSON.parse(localStorage.getItem("list"));
-    else
-      return [];
+const getLocalItems = ()=>{
+  let lists = localStorage.getItem("list");
+  console.log()
+  if(lists)
+   return  JSON.parse(localStorage.getItem("list"));
+  else
+    return [];
 }
+
 const Dashboard = ()=>{ 
   const [toggle,settoggle] = useState(false);
 
   const set = ()=>{
     settoggle(!toggle);
   }
-
-  const [list,setlist] = useState(getLcoalItems());
+  const [list,setlist] = useState(getLocalItems)
   const [percent,setpercent] = useState(0);
   const [date,setdate] = useState(0);
 // TO get the current date 
@@ -91,7 +90,8 @@ const Dashboard = ()=>{
     }
 
     useEffect(()=>{
-        localStorage.setItem("list",JSON.stringify(list))
+      console.log("Items" + JSON.stringify(list))
+      localStorage.setItem('list',JSON.stringify(list))
     },[list])   
 
   return (
