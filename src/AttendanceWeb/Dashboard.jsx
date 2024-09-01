@@ -2,15 +2,16 @@ import React, {  useEffect, useState } from "react";
 import  './dashboard.css';
 import List from "./attendlist";
 import SubDetail from "./Subject-details";
+import { useSelector } from "react-redux";
 
-const getLocalItems = ()=>{
-  let lists = localStorage.getItem("list");
-  console.log()
-  if(lists)
-   return  JSON.parse(localStorage.getItem("list"));
-  else
-    return [];
-}
+// const getLocalItems = ()=>{
+//   let lists = localStorage.getItem("list")
+//   console.log(lists)
+//   if(lists)
+//    return  JSON.parse(localStorage.getItem("list"));
+//   else
+//     return [];
+// }
 
 const Dashboard = ()=>{ 
   const [toggle,settoggle] = useState(false);
@@ -18,9 +19,10 @@ const Dashboard = ()=>{
   const set = ()=>{
     settoggle(!toggle);
   }
-  const [list,setlist] = useState(getLocalItems)
+  // const [list,setlist] = useState(getLocalItems)
   const [percent,setpercent] = useState(0);
   const [date,setdate] = useState(0);
+  const sub = useSelector(state => state?.sub?.subject)
 // TO get the current date 
   useEffect(()=>{
     let today = new Date();
@@ -40,7 +42,7 @@ const Dashboard = ()=>{
   useEffect(()=>{
     let totalpresent = 0;
     let totalclass = 0;
-    list.map((li) =>{
+    sub.map((li) =>{
         totalpresent += Number(li.present)
         totalclass += Number(li.totalclass)
       return(<></>)
@@ -50,13 +52,13 @@ const Dashboard = ()=>{
       setpercent(totalpercent.toFixed(2)); 
     else
       setpercent(0); 
-  },[list])
+  },[sub])
 
   
     
     const find=(id,val)=>{
       console.log(`ID is ${id}`)
-   const new_items = list.map((li)=>{
+   const new_items = sub.map((li)=>{
       if(li.index === id && val === 0){
           return{
         ...li,present:String(Number(li.present) + 1),total:String(Number(li.totalclass) + 1)
@@ -75,7 +77,7 @@ const Dashboard = ()=>{
         index:i
       }))
       
-      setlist(updateindex)
+      // setlist(updateindex)
             return{}
       }
       else{
@@ -84,15 +86,14 @@ const Dashboard = ()=>{
             )
       }
       })
-      if(val !== 2)
-        setlist(new_items)
-      
+      if(val !== 2){}
+      //   setlist(new_items)
+      // localStorage.setItem('list',JSON.stringify(list))
     }
 
     useEffect(()=>{
-      console.log("Items" + JSON.stringify(list))
-      localStorage.setItem('list',JSON.stringify(list))
-    },[list])   
+     console.log(sub)
+    },[])   
 
   return (
     <>
@@ -116,14 +117,14 @@ const Dashboard = ()=>{
         </section>
        
         <div className="List" >
-        {list.map((li,index)=>{
+        {sub.map((li,index)=>{
           return(
            <List
             key = {index}
             id = {index}
-            subject = {li.sub}
+            subject = {li.sub_name}
             present = {li.present}
-            total = {li.total}
+            total = {li.totalclass}
             onSelect = {find}
            />
           )

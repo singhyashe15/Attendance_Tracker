@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {ToastContainer,toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from 'react-redux';
+import { addsub } from '../redux/slice';
 import "./subject.css"
 
 
@@ -14,6 +16,7 @@ const getLocalItems = ()=>{
 }
 
 const SubDetail = ({onClose})=>{
+  const dispatch = useDispatch();
   const [sub,setsub] = useState({sub_name:'',present:'',totalclass:''})
   const [list,setlist] = useState(getLocalItems)
   const regex = /[a-zA-Z]/;
@@ -55,6 +58,7 @@ const SubDetail = ({onClose})=>{
           index:newINdex
         }
       ])
+      console.log(list[list.length - 1])
       setTimeout(()=>{
         console.log("onclose")
         onClose();
@@ -74,6 +78,7 @@ const SubDetail = ({onClose})=>{
 
   useEffect(()=>{
     console.log(list)
+    dispatch(addsub(list[list.length-1]))
      localStorage.setItem("list",JSON.stringify(list))
   },[list])
 
