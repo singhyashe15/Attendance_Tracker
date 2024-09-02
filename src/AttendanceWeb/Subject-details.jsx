@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {ToastContainer,toast} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch } from 'react-redux';
-import { addsub } from '../redux/slice';
 import "./subject.css"
 
 
@@ -16,21 +14,18 @@ const getLocalItems = ()=>{
 }
 
 const SubDetail = ({onClose})=>{
-  const dispatch = useDispatch();
   const [sub,setsub] = useState({sub_name:'',present:'',totalclass:''})
   const [list,setlist] = useState(getLocalItems)
   const regex = /[a-zA-Z]/;
 
   const add = (e) =>{
     const {name,value} = e.target
-    
     setsub((prev)=>{
       return{
         ...prev,
         [name] : value
       }}
     )
-    console.log(sub)
   }
 
   const notifywarn = ()=>{
@@ -40,10 +35,10 @@ const SubDetail = ({onClose})=>{
     toast("classes count cannnot be less than or equal to 0")
   }
   const notifyalpha = ()=>{
-    toast("class cannot have alphabet")
+    toast("class cannot contain alphabet")
   }
   const notifymiss = ()=>{
-    toast("Data are not filled fully")
+    toast("Fill all the data")
   }
 
 
@@ -58,11 +53,9 @@ const SubDetail = ({onClose})=>{
           index:newINdex
         }
       ])
-      console.log(list[list.length - 1])
       setTimeout(()=>{
-        console.log("onclose")
         onClose();
-      },1000)
+      },2000)
     }
     else if(sub.totalclass < sub.present && !regex.test(sub.totalclass) && !regex.test(sub.present)){
       notifywarn();
@@ -77,8 +70,6 @@ const SubDetail = ({onClose})=>{
   }
 
   useEffect(()=>{
-    console.log(list)
-    dispatch(addsub(list[list.length-1]))
      localStorage.setItem("list",JSON.stringify(list))
   },[list])
 

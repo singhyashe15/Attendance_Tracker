@@ -1,17 +1,8 @@
-import React, {  useEffect, useState } from "react";
+import React, {  useCallback, useEffect, useState } from "react";
 import  './dashboard.css';
 import List from "./attendlist";
 import SubDetail from "./Subject-details";
-import { useSelector } from "react-redux";
 
-// const getLocalItems = ()=>{
-//   let lists = localStorage.getItem("list")
-//   console.log(lists)
-//   if(lists)
-//    return  JSON.parse(localStorage.getItem("list"));
-//   else
-//     return [];
-// }
 
 const Dashboard = ()=>{ 
   const [toggle,settoggle] = useState(false);
@@ -19,10 +10,10 @@ const Dashboard = ()=>{
   const set = ()=>{
     settoggle(!toggle);
   }
-  // const [list,setlist] = useState(getLocalItems)
+  const [list,setlist] = useState([])
   const [percent,setpercent] = useState(0);
   const [date,setdate] = useState(0);
-  const sub = useSelector(state => state?.sub?.subject)
+  
 // TO get the current date 
   useEffect(()=>{
     let today = new Date();
@@ -42,94 +33,107 @@ const Dashboard = ()=>{
   useEffect(()=>{
     let totalpresent = 0;
     let totalclass = 0;
-    sub.map((li) =>{
+     list.map((li) =>{
         totalpresent += Number(li.present)
         totalclass += Number(li.totalclass)
       return(<></>)
     });
+  
     let totalpercent = (totalpresent/totalclass) * 100;
     if(totalpercent >= 0)
       setpercent(totalpercent.toFixed(2)); 
     else
       setpercent(0); 
-  },[sub])
+  },[list])
 
-  
+  const Set = useCallback((updateindex)=>{
+    setlist(prevList => {
+      const updatedList = updateindex; 
+      return updatedList;
+    });
+  },[])
     
     const find=(id,val)=>{
-      console.log(`ID is ${id}`)
-   const new_items = sub.map((li)=>{
-      if(li.index === id && val === 0){
+      const new_items = list.map((li)=>{
+          // for present class
+        if(li.index === id && val === 0){
           return{
-        ...li,present:String(Number(li.present) + 1),total:String(Number(li.totalclass) + 1)
-          }
-      }
-      else if(li.index === id && val === 1){
+            ...li,present:String(Number(li.present) + 1),totalclass:String(Number(li.totalclass) + 1)
+              }
+        }
+          // for absent class
+        else if(li.index === id && val === 1){
           return{
-        ...li,total:String(Number(li.totalclass) + 1)
-          }
-      }
-      else if(li.index === id && val === 2){
-        // localStorage.removeItem(li.sub);
-      const updatelist = list.filter((li)=>li.index !== id);
-      const updateindex = updatelist.map((li,i)=>({
-        ...li,
-        index:i
-      }))
-      
-      // setlist(updateindex)
-            return{}
-      }
-      else{
-            return(
-              li
-            )
-      }
+            ...li,totalclass:String(Number(li.totalclass) + 1)
+              }
+        }
+          // for deleting the particular subject
+        else if(li.index === id && val === 2){
+            // localStorage.removeItem(li)
+          const updatelist = list.filter((li)=>li.index !== id);
+          const updateindex = updatelist.map((li,index)=>({
+              ...li,
+              index:index
+          }))
+          
+          Set(updateindex);
+          return {}
+        }
+        else{
+            return li
+        }
       })
-      if(val !== 2){}
-      //   setlist(new_items)
-      // localStorage.setItem('list',JSON.stringify(list))
+      if(id !== 2)
+        localStorage.setItem('list',JSON.stringify(new_items))
     }
+    const store = useCallback(()=>{
+      const item = JSON.parse(localStorage.getItem("list"))
+      setlist(item)
+    },[])
+    
+    useEffect(()=>{
+      store()
+    },[])   
 
     useEffect(()=>{
-     console.log(sub)
-    },[])   
+        localStorage.setItem("list",JSON.stringify(list))
+    },[list])
 
   return (
     <>
         <header className="header">
           <div className="left_view">
-          <div>
-          Total Attendance:{percent}%
-          </div>
             <div>
-          {date}
-          </div>
+              Total Attendance:{percent}%
+            </div>
+            <div>
+              {date}
+            </div>
           </div>
         </header>
         <section className="sub_details">
-        <button className="Details" onClick={()=>set()}>
-              Add Subject
+            <button className="Details" onClick={()=>set()}>
+                Add Subject
             </button>
-         { toggle &&   
-            <SubDetail  onClose={()=>set()} />
-          }
+              { toggle &&   
+                  <SubDetail  onClose={()=>set()} />
+                }
         </section>
        
-        <div className="List" >
-        {sub.map((li,index)=>{
+      <div className="List" >
+        {list && list.map((li,index)=>{
           return(
-           <List
-            key = {index}
-            id = {index}
-            subject = {li.sub_name}
-            present = {li.present}
-            total = {li.totalclass}
-            onSelect = {find}
-           />
+            <List
+              key = {index}
+              id = {index}
+              subject = {li.sub_name}
+              present = {li.present}
+              total = {li.totalclass}
+              onSelect = {find}
+            />
           )
         })}
-        </div>
+      </div>
     </>
  )};
 
