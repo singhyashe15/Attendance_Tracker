@@ -84,7 +84,6 @@ const Dashboard = ()=>{
         }
       })
       if(val !== 2){
-        console.log(new_items)
         Set(new_items)
         localStorage.setItem('list',JSON.stringify(new_items))
       }
