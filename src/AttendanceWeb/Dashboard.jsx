@@ -83,8 +83,11 @@ const Dashboard = ()=>{
             return li
         }
       })
-      if(id !== 2)
+      if(val !== 2){
+        console.log(new_items)
+        Set(new_items)
         localStorage.setItem('list',JSON.stringify(new_items))
+      }
     }
     const store = useCallback(()=>{
       const item = JSON.parse(localStorage.getItem("list"))
@@ -93,7 +96,7 @@ const Dashboard = ()=>{
     
     useEffect(()=>{
       store()
-    },[])   
+    },[toggle])   
 
     useEffect(()=>{
         localStorage.setItem("list",JSON.stringify(list))
